@@ -1,18 +1,17 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-const Signup = () => {
-  const navigate = useNavigate();
+
+const Login = () => {
   const [inputValue, setInputValue] = useState({
     email: "",
     password: "",
-    username: "",
   });
-  const { email, password, username } = inputValue;
+  const { email, password } = inputValue;
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -23,38 +22,46 @@ const Signup = () => {
   };
 
   const handleError = (err) =>
-    toast.error(err, { position: "bottom-left" });
-  
+    toast.error(err, {
+      position: "bottom-left",
+      autoClose: 6000,
+    });
+
   const handleSuccess = (msg) =>
-    toast.success(msg, { position: "bottom-right" });
+    toast.success(msg, {
+      position: "bottom-left",
+      autoClose: 6000,
+    });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/signup`,
+        `${process.env.REACT_APP_BACKEND_URL}/login`,
         { ...inputValue },
         { withCredentials: true }
       );
+      console.log(data);
       const { success, message } = data;
       if (success) {
         handleSuccess(message);
-        setTimeout(() => {
-          navigate("/");
-        }, 1000);
+        window.location.href = `${process.env.REACT_APP_DASHBOARD_URL}/dashboard`;
       } else {
         handleError(message);
       }
     } catch (error) {
       console.log(error);
     }
-    setInputValue({ email: "", password: "", username: "" });
+    setInputValue({
+      email: "",
+      password: "",
+    });
   };
 
   return (
     <div className="container d-flex justify-content-center align-items-center vh-100">
-      <div className="card p-4 shadow" style={{ maxWidth: "400px", width: "100%" }}>
-        <h2 className="text-center mb-4">Signup</h2>
+      <div className="card p-4 shadow-lg" style={{ width: "400px" }}>
+        <h2 className="text-center mb-4">Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="email" className="form-label">Email</label>
@@ -64,18 +71,6 @@ const Signup = () => {
               className="form-control"
               value={email}
               placeholder="Enter your email"
-              onChange={handleOnChange}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="username" className="form-label">Username</label>
-            <input
-              type="text"
-              name="username"
-              className="form-control"
-              value={username}
-              placeholder="Enter your username"
               onChange={handleOnChange}
               required
             />
@@ -92,15 +87,15 @@ const Signup = () => {
               required
             />
           </div>
-          <button type="submit" className="btn btn-primary w-100">Signup</button>
+          <button type="submit" className="btn btn-primary w-100">Submit</button>
+          <p className="text-center mt-3">
+            Don't have an account? <Link to="/singup">Signup</Link>
+          </p>
         </form>
-        <p className="mt-3 text-center">
-          Already have an account? <Link to="/login">Login</Link>
-        </p>
+        <ToastContainer />
       </div>
-      <ToastContainer />
     </div>
   );
 };
 
-export default Signup;
+export default Login;

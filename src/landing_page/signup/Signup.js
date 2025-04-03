@@ -32,7 +32,7 @@ const Signup = () => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/signup`,
+        `${process.env.REACT_APP_BACKEND_URL}signup`,
         { ...inputValue },
         { withCredentials: true }
       );

@@ -37,7 +37,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/login`,
+        `${process.env.REACT_APP_BACKEND_URL}login`,
         { ...inputValue },
         { withCredentials: true }
       );
@@ -45,7 +45,7 @@ const Login = () => {
       const { success, message } = data;
       if (success) {
         handleSuccess(message);
-        window.location.href = `${process.env.REACT_APP_DASHBOARD_URL}/dashboard`;
+        window.location.href = `${process.env.REACT_APP_DASHBOARD_URL}dashboard`;
       } else {
         handleError(message);
       }
